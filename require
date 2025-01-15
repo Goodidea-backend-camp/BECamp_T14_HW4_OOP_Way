@@ -1,0 +1,8 @@
+<?php
+
+require('config.php');
+require('Core/function.php');
+require('Core/Character.php');
+require('Core/Monster.php');
+require('Core/Avatar.php');
+require('Core/Database.php');
