@@ -8,7 +8,7 @@ use Core\Database;
 class Character{
     protected $level;# 角色等級
     protected $name; # 名稱
-    protected $role; #角色   // Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） 
+    protected $role; #角色   // Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） Monster(怪物)
     protected $attribute; # 存放角色屬性
 
     # 各個職業的點數分配比例
