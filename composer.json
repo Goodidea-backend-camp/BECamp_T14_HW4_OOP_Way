@@ -1,0 +1,9 @@
+{
+    "name": "root/rpg",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+        "Core\\": "Core/"
+        }
+    }
+}
