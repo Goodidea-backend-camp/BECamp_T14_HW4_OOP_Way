@@ -41,7 +41,6 @@ function calculate_total_point($role,$level){
 
 
 # todo : 增加輸入判斷
-# todo : 職業選擇用選項的
 function get_userInput($pool){
     $name = re_input('name'); #使用者名稱
     $role = re_input('role'); #職業
@@ -62,11 +61,11 @@ function re_input($key){
             while(empty($user_name)){
                 $user_name = readline("使用者名稱：");
                 #todo 補說明為什麼不能用
-                $player = $db->query("select name from player where name='$user_name'")->find_or_fail();
-                if(empty($player)){
-                    break;
-                }
-                $user_name = '';
+                // $player = $db->query("select name from player where name='$user_name'")->find_or_fail();
+                // if(empty($player)){
+                //     break;
+                // }
+                // $user_name = '';
             }
             return $user_name;
 
@@ -80,3 +79,62 @@ function re_input($key){
 
 # todo : 顯示使用者輸入讓使用者確認輸入
 function check_userSelect(){}
+
+# todo：戰鬥部分先寫成函數
+function duel($player,$monster){
+    $alive = '';
+    $round = 1;
+    $life = $player->attribute['life'];
+    $attacker = compare($player->attribute['speed'],$monster->attribute['speed']);
+    
+    while($player->attribute['life']>0 and $monster->attribute['life']>0){
+        echo PHP_EOL."Round {$round}".PHP_EOL;
+        // echo "Player:{$player->attribute['speed']} , Monster:{$monster->attribute['speed']}".PHP_EOL;
+
+        show_message($player->attribute['speed'],$monster->attribute['speed'],$attacker);
+        [$alive,$attacker] = round_battle($attacker,$player,$monster);
+
+        show_message($player->attribute['speed'],$monster->attribute['speed'],$attacker);
+        [$alive,$attacker] = round_battle($attacker,$player,$monster);
+
+        $round+=1;
+    }
+
+    $player->attribute['life'] = $life;
+    echo "Player:{$player->attribute['life']} , Monster:{$monster->attribute['life']}".PHP_EOL;
+    echo "$alive Win!".PHP_EOL;
+}
+
+function round_battle($attacker,$player,$monster){
+    $alive = '';
+    if($attacker === 'Player'){
+        // $use = readline('使用1.物理攻擊 2.技能 3. 補血');
+        //根據職業使用不同方式處理
+        $monster->attribute['life'] -= $player->attribute['attack'];
+        if($monster->attribute['life']<=0){
+            $alive = 'Player';
+            // break;
+        }
+        $attacker = 'Monster';
+    }else{
+        $player->attribute['life'] -= $monster->attribute['attack']; 
+        if($player->attribute['life']<=0){
+            $alive = 'Monster';
+            // break;
+        }
+        $attacker = 'Player';
+    }
+    return [$alive,$attacker];
+}
+
+function show_message($player_life,$monster_life,$who){
+    echo "Player:{$player_life} , Monster:{$monster_life}".PHP_EOL;
+    echo "{$who} attack".PHP_EOL;
+}
+# 用來比較數值用的
+function compare($user_value, $monster_value){
+    if($user_value > $monster_value){
+        return 'Player';
+    }
+    return 'Monster';
+}
