@@ -6,11 +6,13 @@ require('require');
 use Core\Avatar;
 use Core\Monster;
 use Core\Database;
+use Core\Message;
 
 //預設角色設定
 // Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） 
 $pool = ['Warrior','Mage','Priest','Rogue','Paladin'];
-
+$battle; # 是否要進行對戰
+$show_message; #要顯示的訊息
 check_user_useInterface();
 
 # todo : 是否把戰鬥紀錄紀錄到檔案上避免跳掉後要整關重來 -> https://cloud.tencent.com/developer/article/1706987
@@ -18,5 +20,12 @@ check_user_useInterface();
 
 $user = new Avatar($name,$role);
 $monster = new Monster($name);
+
+$message = new Message();
+$message->attach($user);
 // dd($user);
-// var_dump($user);
+$show_message = "$name ，您好".PHP_EOL."您選擇的是職業是：$role".PHP_EOL;
+$message->setmessage($show_message);
+
+
+// duel($user,$monster);
