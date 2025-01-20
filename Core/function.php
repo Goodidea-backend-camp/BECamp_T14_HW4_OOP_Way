@@ -77,6 +77,14 @@ function re_input($key){
     }       
 }
 
+function fibonacci($n){
+    if($n === 1 or $n === 2){
+        return 1;
+    }else{
+        return fibonacci($n-1)+fibonacci($n-2);
+    }
+}
+
 # todo : 顯示使用者輸入讓使用者確認輸入
 function check_userSelect(){}
 
