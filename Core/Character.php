@@ -10,17 +10,7 @@ class Character{
     public $name; # 名稱
     protected $role; #角色   // Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） Monster(怪物)
     public $attribute; # 存放角色屬性
-
-    # 各個職業的點數分配比例
-    protected $init = [
-        'Warrior' => [30,5,25,5,20,5,5,5],
-        'Mage' => [10,30,5,25,10,10,5,5],
-        #'Priest' => ['life'=>10,'magic'=>10,'attack'=>10,'mag'=>10,'defense'=>10,'mddf'=>10,'speed'=>10,'lucky'=>10],
-        'Rogue' => [15,10,15,10,10,5,30,5],
-        #'Paladin' => ['life'=>10,'magic'=>10,'attack'=>10,'mag'=>10,'defense'=>10,'mddf'=>10,'speed'=>10,'lucky'=>10],
-        'Monster' => [20,30,5,25,5,10,5,0],
-    ];
-
+    
     public function get($value){
         return $this->$value;
     }
