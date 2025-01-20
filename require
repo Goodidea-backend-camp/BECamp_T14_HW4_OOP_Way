@@ -6,3 +6,4 @@ require('Core/Character.php');
 require('Core/Monster.php');
 require('Core/Avatar.php');
 require('Core/Database.php');
+require('Core/Message.php');
