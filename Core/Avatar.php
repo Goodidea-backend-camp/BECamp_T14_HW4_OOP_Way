@@ -18,13 +18,15 @@ class Avatar extends Character implements Observer{ //implements Observer{
     }
 
     public function init($username,$role){
+        $setting = get_setting();
+        $attribute_percent = $setting['attribute_percent'];
         $this->name = $username;
         $this->level = 1;
         $this->role = $role;
         $this->money = 50;
         $this->death_time = 0;
         $point = calculate_total_point($this->role,$this->level);
-        $this->attribute = response_points($this->init[$role],$point,$role);
+        $this->attribute = response_points($attribute_percent[$role],$point,$role);
     }
     
     public function update($message){
