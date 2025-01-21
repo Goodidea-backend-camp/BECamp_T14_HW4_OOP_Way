@@ -85,6 +85,12 @@ function fibonacci($n){
     }
 }
 
+function random_numbers(){
+    $num = range(0,15);
+    shuffle($num);
+    return array_slice($num, 0, 3);
+}
+
 # todo : 顯示使用者輸入讓使用者確認輸入
 function check_userSelect(){}
 
