@@ -8,12 +8,11 @@ class Monster extends Character{
 
     # * 這邊先以建構子跑新建的流程之後會變成呼叫的函式
     # todo 要把拿player id的拆出去變成獨立函式
-    function __construct($player_name){
-        $this->level = 20;
-        $this->role = 'Monster';
-        $db = $this->DBconnect();
-        $player =  $db->query("select * from player where name='$player_name';")->find_or_fail();
-        $this->generate($this->level,$this->role,$player['level']);
+    function __construct(){
+        
+        // $query = "select * from player where name='$player_name';";
+        // $player = operate_DB($query);
+        // $this->generate($this->level,$this->role,$player['level']);
         // $attribute_json = json_encode($this->attribute);
         // $reward_json = json_encode($this->reward);
         // if(!empty($player)){
@@ -21,16 +20,21 @@ class Monster extends Character{
         // }
     }
     
-    public function generate($level,$role,$player_lv){
-        $setting = get_setting();
-        $attribute_percent = $setting['attribute_percent'];
+    public function generate($monster_level,$player_name){
+        $attribute_percent = $this->get_config('attribute_percent');
+        $player = $this->operate_DB("select * from player where name='$player_name';");
+        
         $this->name = $this->rand_name();
+        $this->level = $player['level']+$monster_level;
+        $this->role = 'Monster';
+
         $point = calculate_total_point($this->role,$this->level);
-        $this->attribute = response_points($attribute_percent[$role],$point,$role);
+        $this->attribute = response_points($attribute_percent[$player['role']],$point,$player['role']);
+        
         // 經驗值 = B × ( 1 + M/10 ) x ( 1 + lv-player/lv-monster)
         // 金錢獎勵=fibonacci(lv-monster)
-        $this->reward['money'] = fibonacci($this->level);//ceil(200*(1+$level/20));
-        $this->reward['exp'] = ceil(50*(1+1/10)*(1+$player_lv/$level));
+        $this->reward['money'] = fibonacci($this->level);
+        $this->reward['exp'] = ceil(50*(1+1/10)*(1+$player['level']/$this->level));
     }
 
     public function rand_name(){

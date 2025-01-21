@@ -21,7 +21,12 @@ check_user_useInterface();
 [$name,$role] = get_userInput($pool);
 
 $user = new Avatar($name,$role);
-$monster = new Monster($name);
+
+foreach($challange_lv as $lv ){
+    $monster = new Monster($name);
+    $monster->generate($lv,$name);
+    $challange_monster[] = $monster;
+}
 
 $message = new Message();
 $message->attach($user);
