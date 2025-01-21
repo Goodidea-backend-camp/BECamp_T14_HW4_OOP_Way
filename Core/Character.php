@@ -15,6 +15,16 @@ class Character{
         return $this->$value;
     }
 
+    public function get_config($data){
+        $config = get_setting();
+        return $config[$data];
+    }
+
+    public function operate_DB($query){
+        $db = $this->DBconnect();
+        return $db->query($query)->find_or_fail();
+    }
+
     public function DBconnect(){
         $config = get_setting();
         return new Database($config['Database']);
