@@ -33,7 +33,7 @@ class Database{
         return $this->statement->fetchALL();
     }
     public function find_or_fail(){
-        $result = $this->find();
+        $result = $this->findall();
         if(!$result){
             return "";
         }

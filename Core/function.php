@@ -41,6 +41,14 @@ function calculate_total_point($role,$level){
 
 
 # todo : 增加輸入判斷
+function getOption($number){
+    $option = re_input('option',$number);
+    if(intval($option) === $number){
+        return 'init';
+    }else{
+        return $option;
+    }
+}
 function get_userInput($pool){
     $name = re_input('name'); #使用者名稱
     $role = re_input('role'); #職業
@@ -51,11 +59,12 @@ function get_userInput($pool){
     return [$name,$role];
 }
 
-function re_input($key){
+function re_input($key,$number=''){
     $config = get_setting();
     $db = new Database($config['Database']);
     $user_name = '';
     $role = '';
+    $option = '';
     switch($key){
         case 'name':
             while(empty($user_name)){
@@ -74,6 +83,12 @@ function re_input($key){
                 $role = readline("選擇職業 1.Warrior 2.Mage 3.Priest 4.Rogue 5.Paladin：");
             }
             return $role;
+
+        case 'option':
+            while(empty($option) or !is_numeric($option) or $option<=0 or $option>$number){
+                $option = readline("請選擇要進入的紀錄檔案：");
+            }
+            return $option;
     }       
 }
 
