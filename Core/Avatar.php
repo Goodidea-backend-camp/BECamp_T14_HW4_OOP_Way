@@ -4,14 +4,17 @@ namespace Core;
 require_once('Interfaces/ObserverInterface.php');
 
 use Core\Character;
+use Core\Database;
 use Core\Interfaces\OBserver;
 
 class Avatar extends Character implements Observer{
     protected $money;
-    protected $death_time;
+    protected $death;
+    protected $exp;
+    protected $killed;
 
-    function __construct($username,$role){
-        $this->init($username,$role);
+    function __construct(){
+        // $this->init($username,$role);
         // $db = $this->DBconnect();
         // $attribute_json = json_encode($this->attribute);
         // $db->query("insert into player (name,level,role,attribute,money) values ('{$this->name}',{$this->level},'{$this->role}','{$attribute_json}',{$this->money});");
@@ -23,11 +26,37 @@ class Avatar extends Character implements Observer{
         $this->level = 1;
         $this->role = $role;
         $this->money = 50;
-        $this->death_time = 0;
+        $this->death = 0;
         $point = calculate_total_point($this->role,$this->level);
         $this->attribute = response_points($attribute_percent[$role],$point,$role);
     }
     
+    public function load($query){
+        $number = 0;
+        $old_records = $this->operate_DB($query);
+        // $old_records = $this->load('select * from player');
+        echo str_pad( 'Options', 10 ).str_pad( 'Lv', 10 ) . str_pad( 'Name', 10 ) . str_pad('Role', 10 ) . "\n";
+        foreach($old_records as $record){
+            $number+=1;
+            echo str_pad( $number, 10 ).str_pad( $record['level'], 10 ) . str_pad( $record['name'], 10 ) . str_pad( $record['role'], 10 ) . "\n";
+        }
+        $number+=1;
+        echo str_pad( $number, 10 ). '全新角色' . "\n";
+        return [$number,$old_records];
+    }
+
+    public function reload($playerData){
+        $this->level = $playerData['level'];
+        $this->name = $playerData['name'];        
+        $this->role = $playerData['role'];
+        $this->attribute = $playerData['attribute'];
+        $this->money = $playerData['money'];
+        $this->exp = $playerData['exp'];
+        $this->killed = $playerData['killed'];
+        $this->death = $playerData['death'];
+        return [$this->name,$this->role];    
+    }
+
     public function update($message){
         echo $message;
     }
