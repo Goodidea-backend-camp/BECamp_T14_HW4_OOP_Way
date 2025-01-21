@@ -49,7 +49,7 @@ class Avatar extends Character implements Observer{
         $this->level = $playerData['level'];
         $this->name = $playerData['name'];        
         $this->role = $playerData['role'];
-        $this->attribute = $playerData['attribute'];
+        $this->attribute = json_decode($playerData['attribute'],1);
         $this->money = $playerData['money'];
         $this->exp = $playerData['exp'];
         $this->killed = $playerData['killed'];
