@@ -12,15 +12,22 @@ use Core\Message;
 // Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） 
 $pool = ['Warrior','Mage','Priest','Rogue','Paladin'];
 $battle; # 是否要進行對戰
-$show_message; #要顯示的訊息
-$challange_lv = random_numbers(); #隨機產生三組數字代表要產生的怪物與玩家的等級差距
+$show_message; # 要顯示的訊息
+$challange_lv = random_numbers(); # 隨機產生三組數字代表要產生的怪物與玩家的等級差距
 $challange_monster = array();
+$oldRecord = array(); #存放之前的角色資料
+$userNumber; # 存放全新角色的選項號碼
 check_user_useInterface();
 
 # todo : 是否把戰鬥紀錄紀錄到檔案上避免跳掉後要整關重來 -> https://cloud.tencent.com/developer/article/1706987
-[$name,$role] = get_userInput($pool);
-
-$user = new Avatar($name,$role);
+$user = new Avatar();
+[$userNumber,$oldRecord] = $user->load('select * from player');
+$option = getOption($userNumber);
+if($option === 'init'){
+    [$name,$role] = get_userInput($pool);
+}else{
+    $user->reload($oldRecord[$option-1]);
+}
 
 foreach($challange_lv as $lv ){
     $monster = new Monster($name);
@@ -30,8 +37,8 @@ foreach($challange_lv as $lv ){
 
 $message = new Message();
 $message->attach($user);
-// dd($user);
-$show_message = "$name ，您好".PHP_EOL."您選擇的是職業是：$role".PHP_EOL;
+
+$show_message = PHP_EOL."您選擇的是職業是：".$user->get('role').PHP_EOL;
 $message->setmessage($show_message);
 
 
