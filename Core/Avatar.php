@@ -6,7 +6,7 @@ require_once('Interfaces/ObserverInterface.php');
 use Core\Character;
 use Core\Interfaces\OBserver;
 
-class Avatar extends Character implements Observer{ //implements Observer{
+class Avatar extends Character implements Observer{
     protected $money;
     protected $death_time;
 
@@ -18,8 +18,7 @@ class Avatar extends Character implements Observer{ //implements Observer{
     }
 
     public function init($username,$role){
-        $setting = get_setting();
-        $attribute_percent = $setting['attribute_percent'];
+        $attribute_percent = $this->get_config('attribute_percent');
         $this->name = $username;
         $this->level = 1;
         $this->role = $role;
