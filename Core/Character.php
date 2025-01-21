@@ -20,9 +20,9 @@ class Character{
         return $config[$data];
     }
 
-    public function operate_DB($query){
+    public function operate_DB($query,$allOrOne){
         $db = $this->DBconnect();
-        return $db->query($query)->find_or_fail();
+        return $db->query($query)->find_or_fail($allOrOne);
     }
 
     public function DBconnect(){
