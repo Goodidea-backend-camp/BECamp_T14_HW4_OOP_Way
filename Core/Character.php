@@ -26,7 +26,7 @@ class Character{
     }
 
     public function DBconnect(){
-        $config = get_setting();
-        return new Database($config['Database']);
+        $config = $this->get_config('Database');
+        return new Database($config);
     }
 }
