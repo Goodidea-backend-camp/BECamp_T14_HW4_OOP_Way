@@ -22,7 +22,7 @@ class Monster extends Character{
     
     public function generate($monster_level,$player_name){
         $attribute_percent = $this->get_config('attribute_percent');
-        $player = $this->operate_DB("select * from player where name='$player_name';");
+        $player = $this->operate_DB("select * from player where name='$player_name';",'one');
         
         $this->name = $this->rand_name();
         $this->level = $player['level']+$monster_level;
