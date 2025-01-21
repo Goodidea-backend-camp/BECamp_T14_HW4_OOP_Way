@@ -30,8 +30,8 @@ if($option === 'init'){
 }
 
 foreach($challange_lv as $lv ){
-    $monster = new Monster($name);
-    $monster->generate($lv,$name);
+    $monster = new Monster($user->name);
+    $monster->generate($lv,$user->name);
     $challange_monster[] = $monster;
 }
 

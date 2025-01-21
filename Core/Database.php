@@ -32,8 +32,13 @@ class Database{
     public function findall(){
         return $this->statement->fetchALL();
     }
-    public function find_or_fail(){
-        $result = $this->findall();
+    public function find_or_fail($allOrOne){
+        if($allOrOne === 'all'){
+            $result = $this->findall();
+        }elseif($allOrOne === 'one'){
+            $result = $this->find();
+        }
+        
         if(!$result){
             return "";
         }

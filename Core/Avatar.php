@@ -33,7 +33,7 @@ class Avatar extends Character implements Observer{
     
     public function load($query){
         $number = 0;
-        $old_records = $this->operate_DB($query);
+        $old_records = $this->operate_DB($query,'all');
         // $old_records = $this->load('select * from player');
         echo str_pad( 'Options', 10 ).str_pad( 'Lv', 10 ) . str_pad( 'Name', 10 ) . str_pad('Role', 10 ) . "\n";
         foreach($old_records as $record){
