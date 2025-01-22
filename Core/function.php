@@ -69,12 +69,13 @@ function re_input($key,$number=''){
         case 'name':
             while(empty($user_name)){
                 $user_name = readline("使用者名稱：");
-                #todo 補說明為什麼不能用
-                // $player = $db->query("select name from player where name='$user_name'")->find_or_fail();
-                // if(empty($player)){
-                //     break;
-                // }
-                // $user_name = '';
+                $player = $db->query("select name from player where name='$user_name'")->find_or_fail('one');
+                if(empty($player)){
+                    break;
+                }else{
+                        echo "\033[44;31;4m名字重複，請重新輸入>_<\033[0m\n";
+                }
+                $user_name = '';
             }
             return $user_name;
 
