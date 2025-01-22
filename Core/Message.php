@@ -15,7 +15,7 @@ class Message implements Subject{
         $this->observers[] = $observer;
     }
     public function detach($observer){
-        $index = array_search($observer,$observers);
+        $index = array_search($observer,$this->observers);
         // if($index!== false){
         unset($observers[$index]);
         // }
