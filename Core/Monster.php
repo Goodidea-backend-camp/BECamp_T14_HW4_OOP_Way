@@ -23,7 +23,7 @@ class Monster extends Character{
     public function generate($monster_level,$player_name){
         $attribute_percent = $this->get_config('attribute_percent');
         $player = $this->operate_DB("select * from player where name='$player_name';",'one');
-        
+        # 注意：這邊需要有player data才能使用，因為不想一直寫入所以註冊那邊的SQL指令都先注解掉，用舊角色的功能去測試這段
         $this->name = $this->rand_name();
         $this->level = $player['level']+$monster_level;
         $this->role = 'Monster';
