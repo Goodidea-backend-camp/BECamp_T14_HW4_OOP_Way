@@ -26,7 +26,7 @@ $option = getOption($userNumber);
 if($option === 'init'){
     [$name,$role] = get_userInput($pool);
 }else{
-    $user->reload($oldRecord[$option-1]);
+    [$name,$role] = $user->reload($oldRecord[$option-1]);
 }
 
 foreach($challange_lv as $lv ){
