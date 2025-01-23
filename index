@@ -7,6 +7,7 @@ use Core\Avatar;
 use Core\Monster;
 use Core\Database;
 use Core\Message;
+use Core\Weapon;
 
 //預設角色設定
 // Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） 
@@ -34,6 +35,8 @@ foreach($challange_lv as $lv ){
     $monster->generate($lv,$user->name);
     $challange_monster[] = $monster;
 }
+
+Weapon::create($user);
 
 $message = new Message();
 $message->attach($user);
