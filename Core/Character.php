@@ -29,4 +29,11 @@ class Character{
         $config = $this->get_config('Database');
         return new Database($config);
     }
+    
+    # 注意 未完成先寫這個邏輯而已
+    public function equip($equips){
+        // foreach($equips as $equip){
+        //     $this->equip += $equip;
+        // }
+    }
 }
