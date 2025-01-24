@@ -21,7 +21,7 @@ class Avatar extends Character implements Observer{
     }
 
     public function init($username,$role){
-        $attribute_percent = $this->get_config('attribute_percent');
+        $attribute_percent = getSetting('attribute_percent');
         $this->name = $username;
         $this->level = 1;
         $this->role = $role;
