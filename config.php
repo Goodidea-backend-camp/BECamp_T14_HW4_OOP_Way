@@ -1,8 +1,8 @@
 <?php
 
 #把設定的函式抽出來獨立一個檔案，並切做切分讓這邊的東西以後可以依據不一樣的設定進行擴充
-function get_setting(){
-    return [
+function getSetting($data){
+    $config = [
         "Database"=>[
             "host" => "mysql",
             "port" => 3306,
@@ -22,5 +22,6 @@ function get_setting(){
             'Monster' => [20,30,5,25,5,10,5,0],
         ],
     ];
+    return $config[$data];
 }
 

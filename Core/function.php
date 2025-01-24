@@ -60,8 +60,8 @@ function get_userInput($pool){
 }
 
 function re_input($key,$number=''){
-    $config = get_setting();
-    $db = new Database($config['Database']);
+    $config = getSetting('Database');
+    $db = new Database($config);
     $user_name = '';
     $role = '';
     $option = '';
