@@ -1,7 +1,9 @@
 <?php
 
 namespace Core;
+
 require_once('Interfaces/EquipmentInterface.php');
+
 use Core\Interfaces\Equipment;
 use Core\CreateAx;
 // use Core\CreateWand;
