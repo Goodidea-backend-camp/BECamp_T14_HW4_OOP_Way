@@ -19,11 +19,11 @@ class Weapon implements Equipment{
 
     public static function create($user){
         if($user->get('role') === 'Mage'){
-            return new CreateWand();
+            return new CreateWand($user);
         }elseif($user->get('role') === 'Warrior'){
-            return new CreateAx();
+            return new CreateAx($user);
         }elseif($user->get('role') === 'Rogue'){
-            return new CreateDagger();
+            return new CreateDagger($user);
         }
     }
     public function belongTo($user){}
