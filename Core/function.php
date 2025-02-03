@@ -101,10 +101,10 @@ function fibonacci($n){
     }
 }
 
-function random_numbers(){
-    $num = range(0,15);
+function random_numbers($head,$tail,$limit){
+    $num = range($head,$tail);
     shuffle($num);
-    return array_slice($num, 0, 3);
+    return array_slice($num, 0, $limit);
 }
 
 # todo : 顯示使用者輸入讓使用者確認輸入

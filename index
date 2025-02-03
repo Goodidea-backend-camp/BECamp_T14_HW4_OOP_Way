@@ -14,7 +14,7 @@ use Core\Weapon;
 $pool = ['Warrior','Mage','Priest','Rogue','Paladin'];
 $battle; # 是否要進行對戰
 $show_message; # 要顯示的訊息
-$challange_lv = random_numbers(); # 隨機產生三組數字代表要產生的怪物與玩家的等級差距
+$challange_lv = random_numbers(0,15,3); # 隨機產生三組數字代表要產生的怪物與玩家的等級差距
 $challange_monster = array();
 $oldRecord = array(); #存放之前的角色資料
 $userNumber; # 存放全新角色的選項號碼
