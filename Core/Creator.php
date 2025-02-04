@@ -3,7 +3,6 @@
 namespace Core;
 
 use Core\Database;
-
 # 技能和武器都會繼承這個class讓子類可以不用複寫下面的code
 class Creator{
     protected static $basicAttackWeapon = ["Sword"=>10, "Dagger"=>8, "Wand"=>6, "Ax"=>12];
@@ -24,8 +23,9 @@ class Creator{
         $attack = (self::$basicAttackWeapon[$weaponType] + $user->get("level")*2)*$attackWeight['attackWeight'];
         $money = ceil($attack*$moneyWeight['moneyWeight']*(rand(8,12)/10));
         $specialEffects = $this->specialEffects($rarity);
+        $name = $this->rand_name(4,$specialEffects,$rarity,$weaponType);
 
-        return [$rarity,$moneyWeight,$attackWeight,$attack,$money,$specialEffects];
+        return [$name, $weaponType, $rarity, $attack, $money, $specialEffects,$user->get('level'),$user->get('role')];
     }
 
     public function specialEffects($rarity){
@@ -37,14 +37,35 @@ class Creator{
             return NULL;
         }elseif($rarity === 'Rare'){
             $getAbilityID = rand(1,$specialRowNumber);
-            $ability = $db->query("SELECT * FROM special_effects WHERE id=".$getAbilityID)->find_or_fail('one');
+            $ability = $db->query("SELECT id,name FROM special_effects WHERE id=".$getAbilityID)->find_or_fail('one');
             return $ability;
         }elseif($rarity === 'Epic'){
             $getAbilityNumber = rand(2,4);
             $getAbilityID = implode(',', random_numbers(1,$specialRowNumber,$getAbilityNumber));
-            $ability = $db->query("SELECT * FROM special_effects WHERE id in (".$getAbilityID.")")->find_or_fail('all');
+            $ability = $db->query("SELECT id,name FROM special_effects WHERE id IN (".$getAbilityID.")")->find_or_fail('all');
             return $ability;
         }
+    }
+
+    public function rand_name($number,$specialEffects,$rarit,$weaponType){
+        $chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $name = "";
+
+        if($specialEffects !== NULL and !array_key_exists('name',$specialEffects)){
+            foreach($specialEffects as $specialEffect){
+                $name .= $specialEffect['name'];
+            }
+            $name .= "-";
+        }elseif($specialEffects !== NULL){
+            $name .=  $specialEffects['name']."-";
+        }
+
+        $name .= $rarit.$weaponType."-";
+        for ( $i = 0; $i < $number ; $i++ ){   
+            $name .= $chars[mt_rand(0,35)];
+        }
+
+        return $name;
     }
 
     public function getRarity($query,$oneOrAll){
