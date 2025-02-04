@@ -36,7 +36,9 @@ foreach($challange_lv as $lv ){
     $challange_monster[] = $monster;
 }
 
-Weapon::create($user);
+$userWeapon = new Weapon($user);
+$playerWeapon = $userWeapon->create($user);
+$userWeapon->belongTo($playerWeapon);
 
 $message = new Message();
 $message->attach($user);
