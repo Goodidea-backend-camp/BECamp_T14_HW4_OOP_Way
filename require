@@ -10,3 +10,5 @@ require('Core/Message.php');
 require('Core/Weapon.php');
 require('Core/Creator.php');
 require('Core/CreateWeapon.php');
+require('Core/Traits/StoreTrait.php');
+require('Core/Battle.php');

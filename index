@@ -4,6 +4,7 @@
 require('require');
 // use Core\Character;
 use Core\Avatar;
+use Core\Battle;
 use Core\Monster;
 use Core\Database;
 use Core\Message;
@@ -36,9 +37,12 @@ foreach($challange_lv as $lv ){
     $challange_monster[] = $monster;
 }
 
-$userWeapon = new Weapon($user);
-$playerWeapon = $userWeapon->create($user);
-$userWeapon->belongTo($playerWeapon);
+// $userWeapon = new Weapon($user);
+// $playerWeapon = $userWeapon->create($user,$user->get('level'));
+// $userWeapon->belongTo($playerWeapon);
+$battle = new Battle($user,$monster);
+
+$battle->provide($user);
 
 $message = new Message();
 $message->attach($user);
