@@ -16,13 +16,13 @@ class Weapon implements Equipment{
         $this->user = $user;
     }
 
-    public static function create($user){
+    public static function create($user,$level){
         if($user->get('role') === 'Mage'){
-            $weapon = new CreateWand($user);
+            $weapon = new CreateWand($user,$level);
         }elseif($user->get('role') === 'Warrior'){
-            $weapon = new CreateAx($user);
+            $weapon = new CreateAx($user,$level);
         }elseif($user->get('role') === 'Rogue'){
-            $weapon =  new CreateDagger($user);
+            $weapon =  new CreateDagger($user,$level);
         }
 
         return $weapon;
