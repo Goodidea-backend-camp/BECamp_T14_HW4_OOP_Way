@@ -9,9 +9,9 @@ use Core\Creator;
 # 耐久度 = (基礎值 × 類型修正) + 隨機波動 <- 先不實作
 class CreateAx extends Creator{
     public $result;
-    public function __construct($user)
+    public function __construct($user,$level)
     {   
-        [$name, $weaponType,$rarity,$attack,$money,$specialEffects,$levelRequirement,$charactorRequirement] = $this->weapon($user,'Ax');
+        [$name, $weaponType,$rarity,$attack,$money,$specialEffects,$levelRequirement,$charactorRequirement] = $this->weapon($user,'Ax',$level);
         $this->result = ["name"=>$name, "type"=>$weaponType,"rarity"=>$rarity,"attack"=>$attack,"money"=>$money,"specialEffects"=>$specialEffects,"level_requirement"=>$levelRequirement,"charactor_requirement"=>$charactorRequirement];
         $this->returnResult();
     }
@@ -21,9 +21,9 @@ class CreateAx extends Creator{
 }
 class CreateWand extends Creator{
     public $result;
-    public function __construct($user)
+    public function __construct($user,$level)
     {
-        [$name, $weaponType,$rarity,$attack,$money,$specialEffects,$levelRequirement,$charactorRequirement] = $this->weapon($user,'Wand');
+        [$name, $weaponType,$rarity,$attack,$money,$specialEffects,$levelRequirement,$charactorRequirement] = $this->weapon($user,'Wand',$level);
         $this->result = ["name"=>$name, "type"=>$weaponType,"rarity"=>$rarity,"attack"=>$attack,"money"=>$money,"specialEffects"=>$specialEffects,"level_requirement"=>$levelRequirement,"charactor_requirement"=>$charactorRequirement];
         $this->returnResult();
     }
@@ -33,9 +33,9 @@ class CreateWand extends Creator{
 }
 class CreateDagger extends Creator{
     public $result;
-    public function __construct($user)
+    public function __construct($user,$level)
     {
-        [$name, $weaponType,$rarity,$attack,$money,$specialEffects,$levelRequirement,$charactorRequirement] = $this->weapon($user,'Dagger');
+        [$name, $weaponType,$rarity,$attack,$money,$specialEffects,$levelRequirement,$charactorRequirement] = $this->weapon($user,'Dagger',$level);
         $this->result = ["name"=>$name, "type"=>$weaponType,"rarity"=>$rarity,"attack"=>$attack,"money"=>$money,"specialEffects"=>$specialEffects,"level_requirement"=>$levelRequirement,"charactor_requirement"=>$charactorRequirement];
         $this->returnResult();
     }
