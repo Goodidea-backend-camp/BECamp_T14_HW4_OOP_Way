@@ -31,7 +31,7 @@ class Message implements Subject{
         $this->notify();
     }
 
-    public function printTable(array $header, array $items){
+    public function printTable(array $header, array $items, string $lastItem){
         $columnWidths = array(); #需要的字串大小
         $option = 0; #選項
         $format= '%-'.strlen("option")."s | "; #文字格式
@@ -57,6 +57,8 @@ class Message implements Subject{
             printf($format, ...$row);
             $option += 1;
         }
-
+        printf("%-".strlen("option")."s %-".strlen($lastItem)."s\n",$option,$lastItem);
+        
+        return [re_input('option',$option),$option];
     }
 }
