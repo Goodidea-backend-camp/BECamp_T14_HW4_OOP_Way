@@ -16,16 +16,16 @@ class Creator{
         return $db->query($query)->find_or_fail($oneOrAll);
     }
 
-    public function weapon($user,$weaponType){
+    public function weapon($user,$weaponType,$level){
         $rarity = $this->getRarity("select * from rarity",'all');
         $moneyWeight = $this->execQuery("select moneyWeight from rarity where rarity='$rarity'",'one');
         $attackWeight = $this->execQuery("select attackWeight from rarity where rarity='$rarity'",'one');
-        $attack = (self::$basicAttackWeapon[$weaponType] + $user->get("level")*2)*$attackWeight['attackWeight'];
+        $attack = (self::$basicAttackWeapon[$weaponType] + $level*2)*$attackWeight['attackWeight'];
         $money = ceil($attack*$moneyWeight['moneyWeight']*(rand(8,12)/10));
         $specialEffects = $this->specialEffects($rarity);
         $name = $this->rand_name(4,$specialEffects,$rarity,$weaponType);
 
-        return [$name, $weaponType, $rarity, $attack, $money, $specialEffects,$user->get('level'),$user->get('role')];
+        return [$name, $weaponType, $rarity, $attack, $money, $specialEffects,$level,$user->get('role')];
     }
 
     public function specialEffects($rarity){
