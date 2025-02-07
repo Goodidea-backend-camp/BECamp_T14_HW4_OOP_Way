@@ -8,6 +8,7 @@ use Core\Database;
 use Core\Interfaces\OBserver;
 
 class Avatar extends Character implements Observer{
+    protected $id;
     protected $money;
     protected $death;
     protected $exp;
@@ -46,6 +47,7 @@ class Avatar extends Character implements Observer{
     }
 
     public function reload($playerData){
+        $this->id = $playerData['id'];
         $this->level = $playerData['level'];
         $this->name = $playerData['name'];        
         $this->role = $playerData['role'];
