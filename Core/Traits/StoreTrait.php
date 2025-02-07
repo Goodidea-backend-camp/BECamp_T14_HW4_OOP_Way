@@ -36,11 +36,40 @@ trait Store{
         }
         
         usort($products, function ($a, $b) { return strlen($b['name']) - strlen($a['name']); }); # 把名字最長的放在最陣列前面方便後面的排版
-        $message->printTable($headers,$products);
+        [$option,$lastItemNumber] = $message->printTable($headers,$products,"離開商店");
+
+        if($option === $lastItemNumber){
+            return "@w@";
+        }else{
+            $this->sell($player,$products[$option-1]);
+        }
+        
+        dd($option);
     }
 
-    public function sell(){}
-    public function buy(){}
+    #從商店賣出給玩家
+    public function sell($player,$weapon){
+        $db = $this->dbConnect();
+        $weaponID = $weapon['id'] ?? NULL;
+        $playerID = $player->get('id');
+        if($player->get('money')<$weapon['money']){
+            echo "你錢不夠喔";
+            return;
+        }elseif($weaponID !== NULL){
+            $db->query("UPDATE player_weapon_relationships SET player_id = $playerID  WHERE weapon_id = $weaponID");
+        }else{
+            $weaponS = new Weapon($player);
+            $weaponS->belongTo($weapon);
+        }
+        $money = $player->get('money') - $weapon['money'];
+        $db->query("UPDATE player SET money = $money  WHERE id = $playerID");
+        dd($playerID);
+    }
+    
+    #從玩家手中買進
+    public function buy(){
+
+    }
 
     public function generateProduct($player,$time){
         $products = array();
