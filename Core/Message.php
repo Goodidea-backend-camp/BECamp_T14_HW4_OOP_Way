@@ -33,7 +33,7 @@ class Message implements Subject{
 
     public function printTable(array $header, array $items, string $lastItem){
         $columnWidths = array(); #需要的字串大小
-        $option = 0; #選項
+        $option = 1; #選項
         $format= '%-'.strlen("option")."s | "; #文字格式
         
         foreach($header as $key=>$title){
