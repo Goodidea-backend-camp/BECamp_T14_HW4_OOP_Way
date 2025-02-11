@@ -9,16 +9,11 @@ use Core\Interfaces\OBserver;
 
 class Avatar extends Character implements Observer{
     protected $id;
-    protected $money;
     protected $death;
-    protected $exp;
     protected $killed;
 
     function __construct(){
-        // $this->init($username,$role);
-        // $db = $this->DBconnect();
-        // $attribute_json = json_encode($this->attribute);
-        // $db->query("insert into player (name,level,role,attribute,money) values ('{$this->name}',{$this->level},'{$this->role}','{$attribute_json}',{$this->money});");
+        
     }
 
     public function init($username,$role){
@@ -30,6 +25,21 @@ class Avatar extends Character implements Observer{
         $this->death = 0;
         $point = calculate_total_point($this->role,$this->level);
         $this->attribute = response_points($attribute_percent[$role],$point,$role);
+    }
+
+    public function register($username, $role){
+        $this->init($username,$role);
+        $db = $this->DBconnect();
+        $db->query("insert into player (name,level,role,money) values ('{$this->name}',{$this->level},'{$this->role}',{$this->money});");
+        $playerID =  getID('player','name',$username);
+        if($role !== 'Monster'){
+            $player= "player";
+        }else{
+            $player = "monster";
+        }
+        $db->query("INSERT INTO user_attribute_relationships (user_id,player_or_monster,life,magic,attack,mag,defense,mddf,speed,lucky) VALUES ({$playerID['id']},'{$player}',{$this->attribute['life']},{$this->attribute['magic']},{$this->attribute['attack']},{$this->attribute['mag']},{$this->attribute['defense']},{$this->attribute['mddf']},{$this->attribute['speed']},{$this->attribute['lucky']});");
+        $attributeID = getID("user_attribute_relationships",'user_id',$playerID['id']);
+        $db->query("UPDATE player SET attribute_id = '{$attributeID['id']}' WHERE id = {$playerID['id']} ;");
     }
     
     public function load($query){
@@ -47,15 +57,21 @@ class Avatar extends Character implements Observer{
     }
 
     public function reload($playerData){
+        $config = getSetting('Database');
+        $db =  new Database($config);
+        
         $this->id = $playerData['id'];
         $this->level = $playerData['level'];
         $this->name = $playerData['name'];        
         $this->role = $playerData['role'];
-        $this->attribute = json_decode($playerData['attribute'],1);
         $this->money = $playerData['money'];
         $this->exp = $playerData['exp'];
         $this->killed = $playerData['killed'];
         $this->death = $playerData['death'];
+        
+        $playerAttributeId = $playerData['attribute_id'];
+        $playerData['attribute'] = ($db->query("Select life,magic,attack,mag,defense,mddf,speed,lucky from  user_attribute_relationships where id = $playerAttributeId")->find_or_fail('one'));
+        $this->attribute = $playerData['attribute'];
         return [$this->name,$this->role];    
     }
 
