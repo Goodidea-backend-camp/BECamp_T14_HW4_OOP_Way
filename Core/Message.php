@@ -55,12 +55,13 @@ class Message implements Subject{
                 $row[] = $item[$key] ?? "NULL";
             }
             printf($format, ...$row);
+            $option += 1;
         }
         if($lastItem!==""){
-            $option += 1;
             printf("%-".strlen("option")."s %-".strlen($lastItem)."s\n",$option,$lastItem);
+            return [re_input('option',$option),$option];
         }
         
-        return [re_input('option',$option),$option];
+        return [re_input('option',$option-1),$option-1];
     }
 }
