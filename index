@@ -25,14 +25,18 @@ check_user_useInterface();
 $user = new Avatar();
 $message = new Message();
 # 處理重載舊遊戲檔案
-[$userNumber,$oldRecord] = $user->load('select * from player');
-$option = getOption($userNumber);
-if($option === 'init'){
+[$selectOption,$allOption,$oldRecord] = $user->load('select * from player');
+
+if($selectOption === $allOption){
     [$name,$role] = get_userInput($pool);
     $user->register($name, $role);
 }else{
-    [$name,$role] = $user->reload($oldRecord[$option-1]);
+    [$name,$role] = $user->reload($oldRecord[$selectOption-1]);
 }
+
+$message->attach($user);
+$show_message = PHP_EOL."您選擇的是職業是：".$user->get('role').PHP_EOL;
+$message->setmessage($show_message);
 
 # 生成三隻不一樣等級的怪物讓玩家選擇
 foreach($challange_lv as $lv ){
@@ -61,11 +65,6 @@ $monster->register($challangeMonster[$option-1],$challangeMonster[$option-1]['ro
 
 $battle = new Battle($user,$monster);
 // $battle->provide($user);
-
-$message->attach($user);
-
-$show_message = PHP_EOL."您選擇的是職業是：".$user->get('role').PHP_EOL;
-$message->setmessage($show_message);
 
 
 // duel($user,$monster);
