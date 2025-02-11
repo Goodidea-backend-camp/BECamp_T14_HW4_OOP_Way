@@ -107,5 +107,11 @@ function random_numbers($head,$tail,$limit){
     return array_slice($num, 0, $limit);
 }
 
+function getID($tableName,$key,$userName){
+    $config = getSetting('Database');
+    $db = new Database($config);
+    return  $db->query("select id from $tableName where $key='$userName'")->find_or_fail('one');
+}
+
 # todo : 顯示使用者輸入讓使用者確認輸入
 function check_userSelect(){}
