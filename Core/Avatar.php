@@ -6,6 +6,7 @@ require_once('Interfaces/ObserverInterface.php');
 use Core\Character;
 use Core\Database;
 use Core\Interfaces\OBserver;
+use Core\Message;
 
 class Avatar extends Character implements Observer{
     protected $id;
@@ -43,17 +44,16 @@ class Avatar extends Character implements Observer{
     }
     
     public function load($query){
-        $number = 0;
+        $message = new Message;
+        $header = [
+            "level"=>"lv",
+            "name"=>"Name",
+            "role"=>"Role",
+        ];
         $old_records = $this->operate_DB($query,'all');
-        // $old_records = $this->load('select * from player');
-        echo str_pad( 'Options', 10 ).str_pad( 'Lv', 10 ) . str_pad( 'Name', 10 ) . str_pad('Role', 10 ) . "\n";
-        foreach($old_records as $record){
-            $number+=1;
-            echo str_pad( $number, 10 ).str_pad( $record['level'], 10 ) . str_pad( $record['name'], 10 ) . str_pad( $record['role'], 10 ) . "\n";
-        }
-        $number+=1;
-        echo str_pad( $number, 10 ). '全新角色' . "\n";
-        return [$number,$old_records];
+        usort($old_records, function ($a, $b) { return strlen($b['name']) - strlen($a['name']); }); # 把名字最長的放在最陣列前面方便後面的排版
+        [$selectOption,$allOption] = $message->printTable($header,$old_records,"全新角色");
+        return [$selectOption,$allOption,$old_records];
     }
 
     public function reload($playerData){
