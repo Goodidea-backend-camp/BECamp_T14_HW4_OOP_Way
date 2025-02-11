@@ -10,6 +10,8 @@ class Character{
     public $name; # 名稱
     protected $role; #角色   // Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） Monster(怪物)
     public $attribute; # 存放角色屬性
+    protected $money;
+    protected $exp;
     
     public function get($value){
         return $this->$value;
