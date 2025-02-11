@@ -16,35 +16,52 @@ $pool = ['Warrior','Mage','Priest','Rogue','Paladin'];
 $battle; # 是否要進行對戰
 $show_message; # 要顯示的訊息
 $challange_lv = random_numbers(0,15,3); # 隨機產生三組數字代表要產生的怪物與玩家的等級差距
-$challange_monster = array();
+$challangeMonster = array();
 $oldRecord = array(); #存放之前的角色資料
 $userNumber; # 存放全新角色的選項號碼
 check_user_useInterface();
 
 # todo : 是否把戰鬥紀錄紀錄到檔案上避免跳掉後要整關重來 -> https://cloud.tencent.com/developer/article/1706987
 $user = new Avatar();
+$message = new Message();
+# 處理重載舊遊戲檔案
 [$userNumber,$oldRecord] = $user->load('select * from player');
 $option = getOption($userNumber);
 if($option === 'init'){
     [$name,$role] = get_userInput($pool);
+    $user->register($name, $role);
 }else{
     [$name,$role] = $user->reload($oldRecord[$option-1]);
 }
 
+# 生成三隻不一樣等級的怪物讓玩家選擇
 foreach($challange_lv as $lv ){
     $monster = new Monster($user->name);
     $monster->generate($lv,$user->name);
-    $challange_monster[] = $monster;
+    $monsterArray = array();
+    $arrayForProttected = ["level","name","role","attribute","money","exp"];
+    foreach($arrayForProttected as $key=>$item){
+        $monsterArray[$item] = $monster->get($item);
+    }
+    $challangeMonster[] = $monsterArray;
 }
+$header = [
+    "name"=>"Name",
+    "level"=>"Level",
+    "money"=>"Reward Money",
+    "exp"=>"Reward Exp",
+];
+[$option,$lastItemNumber] =$message->printTable($header,$challangeMonster,"");
+// dd($user->name);
+$monster->register($challangeMonster[$option-1],$challangeMonster[$option-1]['role'],$user->name);
 
 // $userWeapon = new Weapon($user);
 // $playerWeapon = $userWeapon->create($user,$user->get('level'));
 // $userWeapon->belongTo($playerWeapon);
+
 $battle = new Battle($user,$monster);
+// $battle->provide($user);
 
-$battle->provide($user);
-
-$message = new Message();
 $message->attach($user);
 
 $show_message = PHP_EOL."您選擇的是職業是：".$user->get('role').PHP_EOL;
