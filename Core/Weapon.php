@@ -25,7 +25,7 @@ class Weapon implements Equipment{
             $weapon =  new CreateDagger($user,$level);
         }
         $weapon = (array)$weapon;
-
+        dd($weapon);
         return $weapon['result'];
     }
     
