@@ -45,11 +45,7 @@ class Avatar extends Character implements Observer{
     
     public function load($query){
         $message = new Message;
-        $header = [
-            "level"=>"lv",
-            "name"=>"Name",
-            "role"=>"Role",
-        ];
+        $header = getSetting('playerHeader');
         $old_records = $this->operate_DB($query,'all');
         usort($old_records, function ($a, $b) { return strlen($b['name']) - strlen($a['name']); }); # 把名字最長的放在最陣列前面方便後面的排版
         [$selectOption,$allOption] = $message->printTable($header,$old_records,"全新角色");
