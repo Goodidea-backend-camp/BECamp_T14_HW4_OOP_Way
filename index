@@ -63,14 +63,8 @@ while($menuUserSelect!==2){
                 }
                 $challangeMonster[] = $monsterArray;
             }
-            $header = [
-                "name"=>"Name",
-                "level"=>"Level",
-                "money"=>"Reward Money",
-                "exp"=>"Reward Exp",
-            ];
+            $header = getSetting("monsterHeader");
             [$option,$lastItemNumber] =$message->printTable($header,$challangeMonster,"");
-            // dd($user->name);
             $monster->register($challangeMonster[$option-1],$challangeMonster[$option-1]['role'],$user->name);
 
             // $userWeapon = new Weapon($user);
