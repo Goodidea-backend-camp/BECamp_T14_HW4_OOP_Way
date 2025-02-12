@@ -113,5 +113,6 @@ function getID($tableName,$key,$userName){
     return  $db->query("select id from $tableName where $key='$userName'")->find_or_fail('one');
 }
 
-# todo : 顯示使用者輸入讓使用者確認輸入
-function check_userSelect(){}
+function clearMonitor(){
+    echo chr(27).chr(91).'H'.chr(27).chr(91).'J';  # ^[H^[J  清空畫面用
+}
