@@ -45,7 +45,7 @@ class Message implements Subject{
 
         # 印出標頭
         printf($format, ...array_values($header));
-        echo str_repeat("-", array_sum($columnWidths) + (count($header) * 4)) . "\n";
+        echo str_repeat("-", array_sum($columnWidths) + (count($header) * 5)) . "\n";
         unset($header['option']); # 避免下面去用option去找items的東西
 
         foreach ($items as $item) {
