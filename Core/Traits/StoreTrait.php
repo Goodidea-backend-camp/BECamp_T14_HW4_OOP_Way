@@ -21,13 +21,7 @@ trait Store{
         $result = "(".implode(',', array_column($result, 'weapon_id')).")";
         $products = $db->query("SELECT id,name,type,rarity,attack,money,level_requirement,charactor_requirement FROM weapon WHERE id IN $result AND (level_requirement BETWEEN $playerLevel-1 AND $playerLevel+5) AND charactor_requirement = '$playerRole'")->find_or_fail('all');
         $products = $products === "" ? [] : $products;
-        $headers = [
-            "name" => "Item Name",
-            "attack" => "Attack",
-            "money" => "Money",
-            "level_requirement" => "Level Req",
-            "charactor_requirement" => "Char Req"
-        ];
+        $headers = getSetting("storeHeader");
 
         $generateProduct = $this->generateProduct($player,3-count($products));
         $time = 3-count($products);
@@ -43,8 +37,6 @@ trait Store{
         }else{
             $this->sell($player,$products[$option-1]);
         }
-        
-        dd($option);
     }
 
     #從商店賣出給玩家
@@ -63,7 +55,6 @@ trait Store{
         }
         $money = $player->get('money') - $weapon['money'];
         $db->query("UPDATE player SET money = $money  WHERE id = $playerID");
-        dd($playerID);
     }
     
     #從玩家手中買進
