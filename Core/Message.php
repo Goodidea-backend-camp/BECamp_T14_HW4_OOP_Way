@@ -57,11 +57,11 @@ class Message implements Subject{
             printf($format, ...$row);
             $option += 1;
         }
+
         if($lastItem!==""){
             printf("%-".strlen("option")."s %-".strlen($lastItem)."s\n",$option,$lastItem);
             return [re_input('option',$option),$option];
         }
-        
         return [re_input('option',$option-1),$option-1];
     }
 }
