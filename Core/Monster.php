@@ -78,7 +78,9 @@ class Monster extends Character{
         $db->query("INSERT INTO user_attribute_relationships (user_id,player_or_monster,life,magic,attack,mag,defense,mddf,speed,lucky) VALUES ({$monsterID},'{$player}',{$attribute['life']},{$attribute['magic']},{$attribute['attack']},{$attribute['mag']},{$attribute['defense']},{$attribute['mddf']},{$attribute['speed']},{$attribute['lucky']});");
         $attributeID = getID("user_attribute_relationships",'user_id',$monsterID);
         $db->query("UPDATE monster set attribute_id = '{$attributeID}' WHERE id = {$monsterID};");
-        $db->query("INSERT INTO skill_user_relationships (user_id,player_or_monster,skill_id) VALUES ({$monsterID},'monster',{$skillID})");
+        if($skillID !== NULL){
+            $db->query("INSERT INTO skill_user_relationships (user_id,player_or_monster,skill_id) VALUES ({$monsterID},'monster',{$skillID})");
+        }
     }
 
     public function rand_name(){
