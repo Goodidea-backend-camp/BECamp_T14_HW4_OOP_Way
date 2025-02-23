@@ -48,6 +48,46 @@ function getSetting($data){
             "level_requirement" => "Level Req",
             "charactor_requirement" => "Char Req"
         ],
+        "battleHeader" => [
+            "select" => "Select",
+        ],
+        "battleItem" => [
+            0 => ["select" => "Normal Attacker"],
+            1 => ["select" => "Skill"],
+            2 => ["select" => "Supplements"]
+        ],
+        "revialHeader" => [
+            "select" => "Select",
+        ],
+        "revialItem" => [
+            0 => ["select" => "Yes"],
+            1 => ["select" => "No"],
+        ],
+        "supplyHeader" => [
+            "name"=>"Supply Name",
+            "number"=>  "Left",
+        ],
+        "skillHeader" => [
+            "name"=>"Skill Name",
+            "wasteMP"=>  "MP",
+        ],
+        "logHeader"=>[
+            "name"=>"Name",
+            "level"=>"Level",
+            "role"=>"Role",
+            "life"=>"HP",
+            "magic"=>"MP",
+            "attack"=>"Attack",
+            "mag"=>"Magic Attack",
+            "defense"=>"Defense",
+            "mddf"=>"Magic Defense",
+            "speed"=>"Speed",
+            "lucky"=>"Lucky",
+            "exp"=>"Exp",
+            "money"=>"Money",
+            "killed"=>"Killed",
+            "death"=>"Death",
+        ],
     ];
     return $config[$data];
 }
