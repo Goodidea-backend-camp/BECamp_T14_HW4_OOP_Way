@@ -53,7 +53,7 @@ class Monster extends Character{
         $this->attribute = $monster['attribute']; # 存放角色屬性
         $this->money = $monster['money'];
         $this->exp = $monster['exp'];
-        $this->exp = $monster['skill'];
+        $this->skill = $monster['skill'];
     }
 
     public function skill(){
