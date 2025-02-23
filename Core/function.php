@@ -89,7 +89,7 @@ function re_input($key,$number=''){
             while(empty($option) or !is_numeric($option) or $option<=0 or $option>$number){
                 $option = readline("請選擇：");
             }
-            return $option;
+            return (int)$option;
     }       
 }
 
@@ -110,7 +110,8 @@ function random_numbers($head,$tail,$limit){
 function getID($tableName,$key,$userName){
     $config = getSetting('Database');
     $db = new Database($config);
-    return  $db->query("select id from $tableName where $key='$userName'")->find_or_fail('one');
+    $id = $db->query("select id from $tableName where $key='$userName'")->find_or_fail('one');
+    return  $id['id'];
 }
 
 function clearMonitor(){
