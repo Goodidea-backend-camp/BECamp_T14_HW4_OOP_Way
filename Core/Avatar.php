@@ -12,6 +12,8 @@ class Avatar extends Character implements Observer{
     protected $id;
     protected $death;
     protected $killed;
+    protected $weaponID;
+    protected $bag;
 
     function __construct(){
         
@@ -38,9 +40,9 @@ class Avatar extends Character implements Observer{
         }else{
             $player = "monster";
         }
-        $db->query("INSERT INTO user_attribute_relationships (user_id,player_or_monster,life,magic,attack,mag,defense,mddf,speed,lucky) VALUES ({$playerID['id']},'{$player}',{$this->attribute['life']},{$this->attribute['magic']},{$this->attribute['attack']},{$this->attribute['mag']},{$this->attribute['defense']},{$this->attribute['mddf']},{$this->attribute['speed']},{$this->attribute['lucky']});");
-        $attributeID = getID("user_attribute_relationships",'user_id',$playerID['id']);
-        $db->query("UPDATE player SET attribute_id = '{$attributeID['id']}' WHERE id = {$playerID['id']} ;");
+        $db->query("INSERT INTO user_attribute_relationships (user_id,player_or_monster,life,magic,attack,mag,defense,mddf,speed,lucky) VALUES ({$playerID},'{$player}',{$this->attribute['life']},{$this->attribute['magic']},{$this->attribute['attack']},{$this->attribute['mag']},{$this->attribute['defense']},{$this->attribute['mddf']},{$this->attribute['speed']},{$this->attribute['lucky']});");
+        $attributeID = getID("user_attribute_relationships",'user_id',$playerID);
+        $db->query("UPDATE player SET attribute_id = '{$attributeID}' WHERE id = {$playerID} ;");
     }
     
     public function load($query){
@@ -64,28 +66,101 @@ class Avatar extends Character implements Observer{
         $this->exp = $playerData['exp'];
         $this->killed = $playerData['killed'];
         $this->death = $playerData['death'];
+        $this->weaponID = $playerData['weapon_id'];
         
         $playerAttributeId = $playerData['attribute_id'];
         $playerData['attribute'] = ($db->query("Select life,magic,attack,mag,defense,mddf,speed,lucky from  user_attribute_relationships where id = $playerAttributeId")->find_or_fail('one'));
         $this->attribute = $playerData['attribute'];
-        return [$this->name,$this->role];    
+        $this->bag = $this->bag();
+
+        $attribute_percent = getSetting('attribute_percent');
+        $role=$this->role;
+        $this->getLevel($this->exp);
+        $point = calculate_total_point($this->role,$this->level);
+        $this->attribute = response_points($attribute_percent[$role],$point,$role);
+        $query = "SELECT attribute_id FROM player WHERE player.name = '{$this->name}'";
+        $db = $this->DBconnect();
+        $attributID = $db->query($query)->find_or_fail('one');
+        $updateQuery = "UPDATE user_attribute_relationships SET life={$this->attribute['life']},magic={$this->attribute['magic']},attack={$this->attribute['attack']},mag={$this->attribute['mag']},defense={$this->attribute['defense']},mddf={$this->attribute['mddf']},speed={$this->attribute['speed']},lucky={$this->attribute['lucky']} WHERE id={$attributID['attribute_id']} ";
+        $db->query($updateQuery);
+        
+        return [$this->name,$this->role];
     }
 
     public function update($message){
         echo $message;
     }
 
-    #todo : 暫時先把復活的邏輯寫下，後續要再依照情況調整
-    // public function revival($money,$deth_time){
-    //     if($money < pow(2,($deth_time-1))){
-    //         $this->deth_time+=1;
-    //     }else{
-    //         $revial_or_not = readline("你能進行復活，是否要進行!");
-    //         if($revial_or_not === 'yes'){
-    //             $this->money -= pow(2,($deth_time-1));
-    //         }else{
-    //             $this->deth_time+=1;
-    //         }
-    //     }
-    // }
+    public function Bag(){ 
+        $playerID = getID("player","name",$this->name);
+        
+        $totalInBag = 0;
+        $bagArray =[];
+
+        $weaponQuery = "SELECT
+                            player.id,
+                            player_weapon_relationships.weapon_id AS weaponID,
+                            weapon.name AS weapon
+                        FROM
+                            player
+                            JOIN player_weapon_relationships ON player.id = player_weapon_relationships.player_id
+                            JOIN weapon  on player_weapon_relationships.weapon_id  = weapon.id
+                        WHERE
+                            player.id = $playerID";
+        $supplyQuery = "SELECT
+                            player.id,
+                            player_supply_relationships.supply_id AS supplyID,
+                            player_supply_relationships.quantity AS quantity,
+                            supply.name As supplyNamem
+                        FROM
+                            player
+                            JOIN player_supply_relationships ON player.id = player_supply_relationships.player_id
+                            JOIN supply  on player_supply_relationships.supply_id = supply.id
+                        WHERE
+                            player.id = $playerID";
+        $db = new Database(getSetting('Database'));
+        $weaponResult = $db->query($weaponQuery)->find_or_fail('all');
+        $supplyResult = $db->query($supplyQuery)->find_or_fail('all');
+        if($supplyResult !== ''){
+            foreach($supplyResult as $supply){
+                $bagArray[$supply['supplyNamem']] = $supply["quantity"];
+                $totalInBag += ceil($supply["quantity"]/10);
+            }
+        }
+        
+        if($weaponResult !== ''){
+            foreach($weaponResult as $weapon){
+                $bagArray[$weapon['weapon']] = 1;
+                $totalInBag += 1;
+            }
+        }
+        $bagArray['total'] = $totalInBag;
+        
+        return $bagArray;
+    }
+
+    public function getLevel($allExp) {
+        $a = 5;
+        $b = 95;
+        $c = -$allExp;
+    
+        $discriminant = $b * $b - 4 * $a * $c;
+
+        if ($discriminant < 0) {
+            return null; 
+        }
+    
+        $sqrtDiscriminant = sqrt($discriminant);
+        $n1 = (-$b + $sqrtDiscriminant) / (2 * $a);
+        $n2 = (-$b - $sqrtDiscriminant) / (2 * $a);
+
+        if ($n1 > 0) {
+            return (int)$n1;
+        }
+        if ($n2 > 0) {
+            return (int)$n2;
+        }
+    
+        return null;
+    }
 }
