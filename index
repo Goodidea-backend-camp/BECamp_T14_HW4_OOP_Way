@@ -1,0 +1,114 @@
+#!/usr/bin/php
+<?php
+# todo : composer aotoload
+require('require');
+// use Core\Character;
+use Core\Avatar;
+use Core\Battle;
+use Core\Monster;
+use Core\Database;
+use Core\Message;
+use Core\Weapon;
+
+//預設角色設定
+// Warrior（戰士），Mage（法師），Priest（牧師），Rogue（盜賊），Paladin（騎士） 
+$pool = ['Warrior','Mage','Priest','Rogue','Paladin'];
+$battle; # 是否要進行對戰
+$showMessage; # 要顯示的訊息
+$challange_lv = random_numbers(0,15,3); # 隨機產生三組數字代表要產生的怪物與玩家的等級差距
+$oldRecord = array(); #存放之前的角色資料
+$userNumber; # 存放全新角色的選項號碼
+$menuUserSelect=100000;
+
+
+check_user_useInterface();
+
+# todo : 是否把戰鬥紀錄紀錄到檔案上避免跳掉後要整關重來 -> https://cloud.tencent.com/developer/article/1706987
+$user = new Avatar();
+$message = new Message();
+
+
+    // clearMonitor();
+while($menuUserSelect!==3){
+    switch($menuUserSelect-1){
+        case 0:
+            # 處理重載舊遊戲檔案
+            echo PHP_EOL."角色選單：".PHP_EOL;
+            [$selectOption,$allOption,$oldRecord] = $user->load('select * from player');
+            if($selectOption === $allOption){
+                [$name,$role] = get_userInput($pool);
+                $user->register($name, $role);
+                $userWeapon = new Weapon($user);
+                $playerWeapon = $userWeapon->create($user,$user->get('level'));
+                $userWeapon->belongTo($playerWeapon);
+            }else{
+                [$name,$role] = $user->reload($oldRecord[$selectOption-1]);
+            }
+            $message->attach($user);
+            $showMessage = PHP_EOL."您選擇的是職業是：".$user->get('role').PHP_EOL;
+            $message->setmessage($showMessage);
+
+            $challangeMonster = array();
+            # 生成三隻不一樣等級的怪物讓玩家選擇
+            $showMessage = PHP_EOL."怪物選單：".PHP_EOL;
+            $message->setmessage($showMessage);
+            foreach($challange_lv as $lv){
+                $monster = new Monster($user->name);
+                $monster->generate($lv,$user->name);
+                $monsterArray = array();
+                $arrayForProttected = ["level","name","role","attribute","money","exp","skill"];
+                foreach($arrayForProttected as $key=>$item){
+                    $monsterArray[$item] = $monster->get($item);
+                }
+                $challangeMonster[] = $monsterArray;
+            }
+            $header = getSetting("monsterHeader");
+            [$option,$lastItemNumber] =$message->printTable($header,$challangeMonster,"");
+            $monster->load($challangeMonster[$option-1]);
+            $monster->register($challangeMonster[$option-1],$challangeMonster[$option-1]['role'],$user->name);
+
+            
+
+            $battle = new Battle($user,$monster);
+            // $battle->provide($user);
+
+            // duel($user,$monster);
+            break;
+        case 1:
+            echo PHP_EOL."logs".PHP_EOL;
+            $query = "SELECT
+                        player.name,
+                        player.level,
+                        player.role,
+                        player.exp,
+                        user_attribute_relationships.life,
+                        user_attribute_relationships.magic,
+                        user_attribute_relationships.attack,
+                        user_attribute_relationships.mag,
+                        user_attribute_relationships.defense,
+                        user_attribute_relationships.mddf,
+                        user_attribute_relationships.speed,
+                        user_attribute_relationships.lucky,
+                        player.money,
+                        player.killed,
+                        player.death 
+                    FROM
+                        player
+                        JOIN user_attribute_relationships ON player.attribute_id = user_attribute_relationships.id AND user_attribute_relationships.player_or_monster = 'player'";
+            $db = new Database(getSetting('Database'));
+            $logHeader = getSetting("logHeader");
+            $logItem = $db->query($query)->find_or_fail('all');
+            $message->printTable($logHeader,$logItem,"隨意輸入1~6即可返回主選單");
+            $menuUserSelect = 10000;
+            break;
+        case 2:
+            echo "感謝遊玩".PHP_EOL;
+            exit;
+        default:
+            echo PHP_EOL."目錄選單：".PHP_EOL;
+            $mainMenuHeader = getSetting("mainMenuHeader");
+            $mainMenuItem = getSetting("mainMenuItem");
+            [$menuUserSelect, $meanTotalSelect] = $message->printTable($mainMenuHeader,$mainMenuItem,"");
+            break;
+    }
+}

@@ -1,0 +1,14 @@
+<?php
+
+require('config.php');
+require('Core/function.php');
+require('Core/Character.php');
+require('Core/Monster.php');
+require('Core/Avatar.php');
+require('Core/Database.php');
+require('Core/Message.php');
+require('Core/Weapon.php');
+require('Core/Creator.php');
+require('Core/CreateWeapon.php');
+require('Core/Traits/StoreTrait.php');
+require('Core/Battle.php');
