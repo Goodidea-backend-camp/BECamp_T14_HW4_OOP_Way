@@ -355,7 +355,7 @@ class Battle{
         
         if((int)$monster->attribute['life'] <= 0){
             echo "{$player->name} Win!".PHP_EOL;
-            $playerLevel = $player->level;
+            $playerLevel = $player->get('level');
             $rewordMoney = $monster->get('money');
             $rewordExperence = $monster->get('exp');
             $monsterQuery = "UPDATE monster SET killed = 1 WHERE id={$monsterID}";
